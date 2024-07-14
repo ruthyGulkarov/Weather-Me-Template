@@ -1,0 +1,50 @@
+<div class="search-page">
+    <div class="search-and-weather-wrapper">
+        <div class="search-wrapper">
+            <mat-label>Enter city</mat-label>
+            <br>
+            <input type="text" placeholder="City" matInput [formControl]="cityCtrl" [matAutocomplete]="auto">
+
+            <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let option of filteredOptions | async;" [value]="option.LocalizedName"
+                    (onSelectionChange)="selectCity(option)">{{option.LocalizedName}}</mat-option>
+            </mat-autocomplete>
+        </div>
+
+        <div class="weather-wrapper" *ngIf="cityLocation">
+            <button class="add-to-fav" [ngClass]="{'not-fav': !cityInFav}" mat-mini-fab
+                (click)="addOrRemoveFav(cityLocation)">
+                <mat-icon>favorite</mat-icon>
+            </button>
+            <h1>{{cityLocation.LocalizedName}} - {{currentWeatherTemperature}}° </h1>
+
+            <h2>5 day forecast</h2>
+            <table mat-table [dataSource]="weather5DayTemperature" class="mat-elevation-z8 temp-tbl">
+                <ng-container matColumnDef="Date">
+                    <th mat-header-cell *matHeaderCellDef> Date </th>
+                    <td mat-cell *matCellDef="let element"> {{element.Date}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Minimum">
+                    <th mat-header-cell *matHeaderCellDef> Minimum </th>
+                    <td mat-cell *matCellDef="let element"> {{element.Minimum}}° </td>
+                </ng-container>
+
+                <ng-container matColumnDef="Maximum">
+                    <th mat-header-cell *matHeaderCellDef> Maximum </th>
+                    <td mat-cell *matCellDef="let element"> {{element.Maximum}}° </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="fav-wrapper">
+        <h2 *ngIf="favoriteList.length">Favorites</h2>
+        <button *ngFor="let fav of favoriteList" class="fav-btn" (click)="selectCity(fav)">
+            {{fav.LocalizedName}}
+            <span (click)="removeFav(fav,$event)" class="remove-fav">X</span>
+        </button>
+    </div>
+</div>

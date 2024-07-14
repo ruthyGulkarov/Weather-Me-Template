@@ -8,7 +8,9 @@ export class FavoritesService {
   private favorites: Location[] = [];
 
   addToFavorites(location: Location): void {
-    this.favorites.push(location);
+    if (this.favorites.findIndex(f => f.Key == location.Key) == -1) {
+      this.favorites.push(location);
+    }
   }
 
   removeFromFavorites(locationKey: string): void {
